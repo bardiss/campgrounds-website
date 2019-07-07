@@ -1,7 +1,8 @@
 var express = require("express"),               //include express in our app
     bodyParser = require("body-parser"),
     mongoose = require("mongoose"),
-    Campground = require("./models/campground")
+    Campground = require("./models/campground"),
+    seedDB = require("./seeds")
 
 
 
@@ -11,10 +12,10 @@ var app = express();
 app.set("view engine", "ejs")
 app.use(bodyParser.urlencoded({extended: true}));
 
-mongoose.connect("mongodb://localhost/yelp_camp")
+mongoose.connect("mongodb://localhost:27017/yelp_camp",{useNewUrlParser: true});
 ////////
 
-
+seedDB();
 //basic routes
 
 app.get("/camps", function(req, res){
@@ -23,7 +24,7 @@ app.get("/camps", function(req, res){
         if(err){
             console.log(err)
         }else{
-            res.render("camps", {camps:AllFoundCamps}); //send object its name camps and take its value from campgrounds var  
+            res.render("index", {camps:AllFoundCamps}); //send object its name camps and take its value from campgrounds var  
         }
     })
 
@@ -36,7 +37,8 @@ app.get("/camps", function(req, res){
 app.post("/camps", function(req, res){
     var name = req.body.name
     var img = req.body.image
-    var NewCamp = {name: name, image: img}; //create object to add it to the array of objects (campgrounds)
+    var desc = req.body.description
+    var NewCamp = {name: name, image: img, description: desc}; //create object to add it to the array of objects (campgrounds)
     Campground.create(NewCamp, function(err, addedCamp){
         if (err){
         console.log(err)
@@ -51,9 +53,24 @@ app.post("/camps", function(req, res){
 
 
 // Just render the form to create new campground
-app.get("/new", function(req, res){
+app.get("/camps/new", function(req, res){
     res.render("new");
+});
+
+
+app.get("/camps/:id", function(req, res){
+    Campground.findById(req.params.id).populate("comments").exec( function(err, foundcamp){
+        if(err){
+            console.log(err)
+        }else{
+            console.log(foundcamp)
+            res.render("show", {camp: foundcamp})
+        }
+    })
+    
 })
+
+
 
 app.get("/", function(req, res){
     res.render("landing");
@@ -62,11 +79,24 @@ app.get("/", function(req, res){
 
 
 
-app.get("/*", function(req, res){
-    res.send("hi there");
-});
+
+//=================
+//comments routes
+//==================
+app.get("/camps/:id/comments/new", function(req, res){
+    Campground.findById(req.params.id, function(err, camp){
+        if(err){
+            console.log(err)
+        }else{
+            res.render("newComment", {camp: camp})
+        }
+    })
+    
+})
 
 
+
+//===============================================
 // to strart the server
 app.listen(3000, function(){
     console.log("server has been started");
