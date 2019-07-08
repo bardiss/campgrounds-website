@@ -4,7 +4,8 @@
     <div class="row">
         <h1 style="text-align: center">Add New Comment to <%= camp.name %></h1>
         <div style="width: 30%; margin: 25px auto;">
-            <form action="/campgrounds/<%= camp._id %>/comments" method="POST">
+            <!-- to still have the id <NESTED ROUTES>-->
+            <form action="/camps/<%= camp._id %>/comments" method="POST">
                 <div class="form-group">
                     <input class="form-control" type="text" name="comment[text]" placeholder="text">
                 </div>

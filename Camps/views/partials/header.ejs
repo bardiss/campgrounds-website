@@ -2,8 +2,11 @@
 <html>
     <head>
         <title>Camps</title>
-       
+        <!--First bootstrap link then css file link -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/stylesheet/main.css">
+
+        
 
     </head>
     <body>
@@ -15,9 +18,14 @@
                 </div>
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="/">Login</a></li>
-                        <li><a href="/">Sign Up</a></li>
-                        <li><a href="/">Logout</a></li>
+                        <% if(!CurrentUser){ %>
+                            <li><a href="/login">Login</a></li>
+                            <li><a href="/register">Sign Up</a></li>
+                        <% }else{ %>
+                            <!--may be link to profile-->
+                            <li><a href="#">Signed As <%= CurrentUser.username %></a></li>
+                            <li><a href="/logout">Logout</a></li>
+                        <% } %>
                     </ul>
                 </div>
             </div>
