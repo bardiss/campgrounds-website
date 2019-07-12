@@ -20,12 +20,22 @@
                     <p>
                         <em>Submitted by: <%= camp.author.username %></em>
                     </p>
+                    <!-- current user instead of req.params.id >> no request here-->
+                    <!-- current user cuz if there is any users we can't obtain currentuser.id -->
+                    <% if (CurrentUser && camp.author.id.equals(CurrentUser.id)) {%>
+                        <a class="btn  btn-warning" href="/camps/<%= camp._id %>/edit">Edit</a>
+
+                        <form id="delete_form" action="/camps/<%= camp.id %>?_method=Delete" method="POST">
+                            <button class="btn btn-danger">Delete</button>
+                        </form>
+                    <%   } %>  
                 </div>
             </div>
             <div class="well">
                     <div class="text-right">
                             <a href="/camps/<%= camp._id %>/comments/new" class="btn btn-success">Create new comment</a>
                     </div>
+
                     <hr>
                     <% camp.comments.forEach(function(comment){ %>
                         <div class="row">
@@ -35,6 +45,16 @@
                                 <p>
                                     <%= comment.text %> 
                                 </p>
+
+                                <a class="btn btn-warning btn-xs" href="/camps/<%= camp._id %>/comments/<%= comment._id %>/edit ">Edit</a>
+
+                                <form id="delete_form" action="/camps/<%= camp._id %>/comments/<%= comment._id %>?_method=Delete" method="POST">
+                                    <button class="btn btn-xs btn-danger"> Delete </button>
+
+                                </form>
+                                
+
+                                
                             </div>
                         </div>
                     <% }) %>

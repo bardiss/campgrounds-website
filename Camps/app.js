@@ -8,6 +8,8 @@ var express = require("express"),               //include express in our app
     User = require("./models/user"),
     seedDB = require("./seeds");
 
+var Method_override = require("method-override");
+
 // ===== include the routes =========
 
 var index_routes = require("./routes/index"),
@@ -19,7 +21,8 @@ var index_routes = require("./routes/index"),
 var app = express();   
 app.set("view engine", "ejs")
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(express.static("public"))
+app.use(express.static("public"));
+app.use(Method_override("_method"));
 
 
 mongoose.connect("mongodb://localhost:27017/yelp_camp",{useNewUrlParser: true});

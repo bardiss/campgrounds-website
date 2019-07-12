@@ -1,6 +1,9 @@
 var express = require("express");
 var router = express.Router({mergeParams: true});
-var Campground = require ("../models/campground")
+var Campground = require ("../models/campground");
+
+
+
 
 
 router.get("/camps", function(req, res){
@@ -57,9 +60,43 @@ router.get("/camps/:id", function(req, res){
     })
     
 });
+//====== Edit Route =============
+router.get("/camps/:id/edit", check_ownership, function(req, res){
+    Campground.findById(req.params.id, function(err, foundcamp){
+        if(err){
+            res.redirect("/camps");
+        }else{
+            res.render("edit_form", {camp: foundcamp}); 
+        }
+    });
+    
+});
 
+//====== Update Route =============
 
-//====== MIDDLE WARE =============
+router.put("/camps/:id", check_ownership, function(req, res){
+    Campground.findByIdAndUpdate(req.params.id, req.body.Edited_camp, function(err, foundcamp){
+        if (err){
+            res.redirect("/camps")
+        }else{
+            res.redirect("/camps/"+ req.params.id)
+        }
+    })
+});
+
+//======= Delete Route ===========
+
+router.delete("/camps/:id", check_ownership, function(req, res){
+    Campground.findByIdAndDelete(req.params.id, function(err, foundcamp){
+        if(err){
+            res.redirect("/camps");
+        }else{
+            res.redirect("/camps");
+        }
+    });
+});
+
+//====== MIDDLEWARE =============
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated()){
         return next();
@@ -69,6 +106,26 @@ function isLoggedIn(req, res, next){
     
 }
 
+function check_ownership(req, res, next){
+    if (req.isAuthenticated()){
+        Campground.findById(req.params.id, function(err, foundcamp){
+            if(err){
+                res.redirect("back");
+            }else{
+                console.log(foundcamp)
+                if(foundcamp.author.id.equals(req.user._id)){
+                    next();                     //keep moving 
+                }else{
+                    res.redirect("back");
+                }
+            }
+        })
+        
+    }
+    else{
+        res.send("you are not allowed to do that, shame on you!")
+    }
+}
 
 
 module.exports = router;

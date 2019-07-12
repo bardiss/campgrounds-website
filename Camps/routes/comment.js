@@ -4,9 +4,9 @@ var Campground = require("../models/campground"),
     Comment = require("../models/comment");
 
 
-//=================
-//comments routes
-//==================
+//========================================
+//comments routes... NESTED ROUTES
+//========================================
 router.get("/camps/:id/comments/new", isLoggedIn, function(req, res){
     Campground.findById(req.params.id, function(err, camp){
         if(err){
@@ -48,6 +48,43 @@ router.post("/camps/:id/comments", isLoggedIn,  function(req, res){
         }
     })
 });
+//===== edit comment ==========
+router.get("/camps/:id/comments/:comment_id/edit", function(req, res){
+    Comment.findById(req.params.comment_id, function(err, found_comment){
+        if (err){
+            console.log(err);
+            res.redirect("back");
+        }else{
+            res.render("editComment", {campground_id:req.params.id, comment: found_comment}); 
+        }
+
+    })
+    
+});
+
+//======= update comment =========
+router.put("/camps/:id/comments/:comment_id", function(req, res){
+    Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, function(err, comment){
+        if (err){
+            console.log(err);
+            res.redirect("/camps")
+        }else{
+            res.redirect("/camps/"+ req.params.id);
+        }
+    });
+});
+
+//====== delete comment =========
+router.delete("/camps/:id/comments/:comment_id", function(req, res){
+    Comment.findByIdAndDelete(req.params.comment_id, function(err){
+        if (err){
+            console.log(err);
+            res.redirect("back");
+        }else{
+            res.redirect("/camps/"+req.params.id);
+        }
+    })
+})
 
 //====== MIDDLE WARE =============
 function isLoggedIn(req, res, next){
