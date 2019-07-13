@@ -6,6 +6,7 @@ var express = require("express"),               //include express in our app
     Campground = require("./models/campground"),
     Comment = require("./models/comment"),
     User = require("./models/user"),
+    flash = require("connect-flash")
     seedDB = require("./seeds");
 
 var Method_override = require("method-override");
@@ -23,6 +24,7 @@ app.set("view engine", "ejs")
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 app.use(Method_override("_method"));
+app.use(flash());
 
 
 mongoose.connect("mongodb://localhost:27017/yelp_camp",{useNewUrlParser: true});
@@ -48,6 +50,8 @@ passport.deserializeUser(User.deserializeUser());
 // arrangement is important, it must come first before routes.
 app.use(function(req, res, next){
     res.locals.CurrentUser = req.user;
+    res.locals.error = req.flash("error");
+    res.locals.success = req.flash("success");
     next();
 });
 //===================================================

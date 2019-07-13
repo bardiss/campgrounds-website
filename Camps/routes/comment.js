@@ -2,12 +2,12 @@ var express = require("express");
 var router = express.Router({mergeParams: true});
 var Campground = require("../models/campground"),
     Comment = require("../models/comment");
-
+var MiddlewareObj = require("../middleware/index");
 
 //========================================
 //comments routes... NESTED ROUTES
 //========================================
-router.get("/camps/:id/comments/new", isLoggedIn, function(req, res){
+router.get("/camps/:id/comments/new", MiddlewareObj.isLoggedIn, function(req, res){
     Campground.findById(req.params.id, function(err, camp){
         if(err){
             console.log(err)
@@ -18,7 +18,7 @@ router.get("/camps/:id/comments/new", isLoggedIn, function(req, res){
     
 });
 
-router.post("/camps/:id/comments", isLoggedIn,  function(req, res){
+router.post("/camps/:id/comments", MiddlewareObj.isLoggedIn,  function(req, res){
     Campground.findById(req.params.id, function(err, foundcamp){
         if(err){
             console.log(err)
@@ -26,6 +26,7 @@ router.post("/camps/:id/comments", isLoggedIn,  function(req, res){
             Comment.create(req.body.comment, function(err, comment){
                 if(err){
                     console.log(err)
+                    req.flash("error", "something went wrong!")
                 }else{
                     //comment is object comes from the form and we wanna store it in DB
                     //req.user must be defind cuz of the midddle ware that force u to log in
@@ -39,6 +40,7 @@ router.post("/camps/:id/comments", isLoggedIn,  function(req, res){
                         if(err){
                             console.log(err)
                         }else{
+                            req.flash("success", "successfully added new comment!")
                             res.redirect('/camps/' + foundcamp._id)
                         }
                     })
@@ -49,7 +51,7 @@ router.post("/camps/:id/comments", isLoggedIn,  function(req, res){
     })
 });
 //===== edit comment ==========
-router.get("/camps/:id/comments/:comment_id/edit", function(req, res){
+router.get("/camps/:id/comments/:comment_id/edit",MiddlewareObj.check_comment_ownership, function(req, res){
     Comment.findById(req.params.comment_id, function(err, found_comment){
         if (err){
             console.log(err);
@@ -63,7 +65,7 @@ router.get("/camps/:id/comments/:comment_id/edit", function(req, res){
 });
 
 //======= update comment =========
-router.put("/camps/:id/comments/:comment_id", function(req, res){
+router.put("/camps/:id/comments/:comment_id",MiddlewareObj.check_comment_ownership, function(req, res){
     Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, function(err, comment){
         if (err){
             console.log(err);
@@ -75,26 +77,18 @@ router.put("/camps/:id/comments/:comment_id", function(req, res){
 });
 
 //====== delete comment =========
-router.delete("/camps/:id/comments/:comment_id", function(req, res){
+router.delete("/camps/:id/comments/:comment_id",MiddlewareObj.check_comment_ownership, function(req, res){
     Comment.findByIdAndDelete(req.params.comment_id, function(err){
         if (err){
             console.log(err);
             res.redirect("back");
         }else{
+            req.flash("success", "comment deleted!")
             res.redirect("/camps/"+req.params.id);
         }
     })
 })
 
-//====== MIDDLE WARE =============
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    }
-
-    res.redirect("/login")
-    
-}
 
 
 module.exports = router;
