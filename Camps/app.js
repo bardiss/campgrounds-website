@@ -27,7 +27,8 @@ app.use(Method_override("_method"));
 app.use(flash());
 
 
-mongoose.connect("mongodb://localhost:27017/yelp_camp",{useNewUrlParser: true});
+//mongoose.connect("mongodb://localhost:27017/yelp_camp",{useNewUrlParser: true});
+mongoose.connect("mongodb+srv://bardis:yelp_camp12345@cluster0-raqjm.mongodb.net/test?retryWrites=true&w=majority",{useNewUrlParser: true});
 
 //====== SEED THE DATA BASE ========
 
