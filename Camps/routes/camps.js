@@ -29,15 +29,16 @@ router.post("/camps", MiddlewareObj.isLoggedIn, function(req, res){
 });
 
 router.get("/camps", function(req, res){
-/*
+
     Campground.find({}, function(err, allCampgrounds){
         if(err){
             console.log(err);
         } else {
            res.render("index",{camps:allCampgrounds});
         }
-     });*/
-     res.render("register")
+     });
+     
+   
  });
 
 
