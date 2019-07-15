@@ -29,6 +29,9 @@ app.use(flash());
 
 //mongoose.connect("mongodb://localhost:27017/yelp_camp",{useNewUrlParser: true});
 mongoose.connect("mongodb+srv://bardis:yelp_camp12345@cluster0-raqjm.mongodb.net/test?retryWrites=true&w=majority",{useNewUrlParser: true});
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
 
 //====== SEED THE DATA BASE ========
 
@@ -64,6 +67,11 @@ app.use(comment_routes);
 //====================================================
 
 // to strart the server
+/*
 app.listen(3000, function(){
+    console.log("server has been started");
+});
+*/
+app.listen(process.env.PORT || 5000, function(){
     console.log("server has been started");
 });
