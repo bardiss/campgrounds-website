@@ -8,16 +8,17 @@ var MiddlewareObj = require("../middleware/index");
 
 router.get("/camps", function(req, res){
 
-    Campground.find({}, function(err, AllFoundCamps){
+    Campground.find({}, function(err, allCampgrounds){
         if(err){
-            console.log(err)
-        }else{
-            res.render("index", {camps:AllFoundCamps}); //send object its name camps and take its value from campgrounds var  
+            console.log(err);
+        } else {
+           res.render("index",{camps:allCampgrounds});
         }
-    })
+     });
+ });
+
 
     
-});
 
 
 //take the info in post req. came from the form and craete camp object then add it to campgrounds array
