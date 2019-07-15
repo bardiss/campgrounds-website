@@ -5,22 +5,6 @@ var MiddlewareObj = require("../middleware/index");
 
 
 
-
-router.get("/camps", function(req, res){
-
-    Campground.find({}, function(err, allCampgrounds){
-        if(err){
-            console.log(err);
-        } else {
-           res.render("index",{camps:allCampgrounds});
-        }
-     });
- });
-
-
-    
-
-
 //take the info in post req. came from the form and craete camp object then add it to campgrounds array
 //the 2nd time we run the server the campgrounds return back with its initial camps
 router.post("/camps", MiddlewareObj.isLoggedIn, function(req, res){
@@ -43,6 +27,18 @@ router.post("/camps", MiddlewareObj.isLoggedIn, function(req, res){
     
 
 });
+
+router.get("/camps", function(req, res){
+
+    Campground.find({}, function(err, allCampgrounds){
+        if(err){
+            console.log(err);
+        } else {
+           res.render("index",{camps:allCampgrounds});
+        }
+     });
+ });
+
 
 
 // Just render the form to create new campground
