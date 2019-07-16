@@ -1,9 +1,25 @@
-<% include partials/header %> 
-<h1>Sign Up!</h1>
+ 
+<% include partials/header %>
+<div class="container">
+    <div class="row">
+        <h1 style="text-align: center">Sign up Form</h1>
+        <div style="width: 30%; margin: 25px auto;">
+            <form action="/register" method="post">
+                <div class="form-group">
+                    <input class="form-control" name = "username" placeholder="username" type="text">
+                </div>
 
-<form action="/register" method="post">
-    <input type="text" name="username" placeholder="username">
-    <input type="password" name="password" placeholder="password">
-    <button>Sign Up</button>
-</form>
-<% include partials/footer %> 
+                <div class="form-group">
+                    <input class="form-control" name = "password" placeholder="password" type="password">
+                </div>
+
+                
+                <div class="form-group">
+                    <button class="btn btn-lg btn-primary btn-block">Sign up</button>
+                </div>
+            </form>
+            <a href="/camps">Go Back</a>
+        </div>
+    </div>
+</div>
+<% include partials/footer %>
