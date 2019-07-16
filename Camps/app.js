@@ -28,7 +28,8 @@ app.use(flash());
 
 
 //mongoose.connect("mongodb://localhost:27017/yelp_camp",{useNewUrlParser: true});
-mongoose.connect("mongodb+srv://bardis:mongodb971997@cluster0-h8jih.mongodb.net/test?retryWrites=true&w=majority",{useNewUrlParser: true});
+mongoose.connect(process.env.PORT.DATABASEURL,{useNewUrlParser: true})
+//mongoose.connect("mongodb+srv://bardis:mongodb971997@cluster0-h8jih.mongodb.net/test?retryWrites=true&w=majority",{useNewUrlParser: true});
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
